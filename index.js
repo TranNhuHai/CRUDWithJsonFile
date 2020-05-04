@@ -2,22 +2,33 @@ const express = require('express');
 const app = express();
 const port = 8080;
 const fs = require('fs');
+const bodyParser = require('body-parser');
 
 
 app.listen(port, () => console.log(`Server starting at ${port}`));
 app.set('view engine', 'pug')
 app.set('views', './views');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
-const data = fs.readFileSync('./data.json', {
-  encoding: 'utf8'
-});
-const lists = JSON.parse(data);
+let lists ;
+function loadData(){
+  const data = fs.readFileSync('./data.json', {
+    encoding: 'utf8'
+  });
+  lists = JSON.parse(data);
+}
 
+function saveList() {
+  const data2 = JSON.stringify(lists);
+  fs.writeFileSync('./data.json', data2);
+}
 
 app.get('/', function (req, res) {
   res.render('index');
 });
 app.get('/list', function (req, res) {
+  loadData();
   res.render('list/index', {
     lists
   });
@@ -26,5 +37,13 @@ app.get('/list/add', function (req, res) {
   res.render('list/add');
 });
 app.post('/list/add', function(req, res) {
-
+  loadData();
+  const list = {
+    id: lists.length + 1,
+    name: req.body.name
+  };
+  lists.push(list);
+  saveList();
+  loadData();
+  res.redirect('/list');
 });
