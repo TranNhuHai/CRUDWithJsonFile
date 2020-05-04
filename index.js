@@ -39,11 +39,26 @@ app.get('/list/add', function (req, res) {
 app.post('/list/add', function(req, res) {
   loadData();
   const list = {
-    id: lists.length + 1,
+    id: lists[lists.length - 1].id + 1,
     name: req.body.name
   };
   lists.push(list);
   saveList();
   loadData();
+  res.redirect('/list');
+});
+
+app.get('/list/update', function (req, res) {
+  loadData();
+  res.render('list/update');
+});
+
+app.post('/list/update', function (req, res) {
+  loadData()
+  const index = lists.findIndex((list) => list.name == req.body.old_name);
+  if(index >= 0) {
+    lists[index].name = req.body.new_name;
+  }
+  saveList();
   res.redirect('/list');
 });
