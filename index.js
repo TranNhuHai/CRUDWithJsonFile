@@ -22,3 +22,9 @@ app.get('/list', function (req, res) {
     lists
   });
 });
+app.get('/list/add', function (req, res) {
+  res.render('list/add');
+});
+app.post('/list/add', function(req, res) {
+
+});
