@@ -69,7 +69,7 @@ app.get('/list/remove', function (req, res) {
   loadData();
   res.render('list/remove');
 });
-app.post('/list/remove', function (req, res) {
+app.delete('/list/remove', function (req, res) {
   loadData();
   const index = lists.findIndex(list => list.name == req.body.name);
   if(index >= 0) lists.splice(index, 1);
