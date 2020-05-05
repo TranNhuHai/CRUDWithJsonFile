@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-let lists;
+let lists =[{id: 0, name: "Admin"}];
 
 function loadData() {
   const data = fs.readFileSync('./data.json', {
@@ -67,12 +67,12 @@ app.post('/list/update', function (req, res) {
 });
 app.get('/list/remove', function (req, res) {
   loadData();
-  res.render('/list/remove');
+  res.render('list/remove');
 });
-app.delete('/list/remove', function (req, res) {
+app.post('/list/remove', function (req, res) {
   loadData();
   const index = lists.findIndex(list => list.name == req.body.name);
-  lists.splice(index, 1);
+  if(index >= 0) lists.splice(index, 1);
   saveList();
   res.redirect('/list');
 })
